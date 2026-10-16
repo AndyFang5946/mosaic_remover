@@ -123,10 +123,6 @@ def main():
         device=device
     )
 
-    print("Mosaic shape:", mosaic.shape)
-    print("Clean shape:", clean.shape)
-    print("Ground-truth mask shape:", true_mask.shape)
-
     image = mosaic.to(device)
 
     with torch.no_grad():
@@ -144,6 +140,8 @@ def main():
 
     save_mask(mask, os.path.join(output_dir, "mask.png"))
     save_RGB(restored, os.path.join(output_dir, "restored.png"))
+    save_RGB(mosaic, os.path.join(output_dir, "mosaic.png"))
+    save_RGB(clean, os.path.join(output_dir, "clean.png"))
 
 if __name__ == "__main__":
     main()
