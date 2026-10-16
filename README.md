@@ -99,8 +99,6 @@ Final Output Image
 
 The detector and restoration model have different responsibilities: the detector identifies *where* the mosaic is located, while the restoration model predicts *what the affected image content might look like*.
 
-The exact degree of integration between these stages depends on the current implementation.
-
 ## Technologies Used
 
 - **Python** — Main programming language
@@ -113,37 +111,32 @@ The exact degree of integration between these stages depends on the current impl
 
 ## Project Structure
 
-An example organization for the project is shown below. Adjust the filenames to match the actual repository.
-
 ```text
 mosaic-remover/
 │
 ├── dataset/
-│   ├── original/
-│   ├── mosaicked/
-│   └── masks/
+│   ├── train/
+│   ├── validation/
+│   └── test/
 │
-├── images/
-│   ├── original.png
-│   ├── mosaicked.png
-│   ├── detected_mask.png
-│   └── restored.png
+├── results/
+│   ├── clean.png
+│   ├── mosaic.png
+│   ├── mask.png
+│   ├── mosaic_compare.png
+│   ├── restored.png
+│   └── restored_compare.png
 │
 ├── models/
-│   ├── mosaic_detector.py
+│   ├── __init__.py
 │   └── unet.py
 │
-├── scripts/
-│   └── prepare_dataset.py
-│
+├── prepare_dataset.py
 ├── train.py
 ├── train_detector.py
-├── predict.py
-├── requirements.txt
+│  ...
 └── README.md
 ```
-
-This is a suggested layout, not a requirement. Keep your existing project structure if your scripts and dataset are organized differently.
 
 ## Dataset Preparation
 
@@ -157,21 +150,11 @@ A supervised training dataset can contain three corresponding items:
 
 For paired training, each mosaicked image should correspond to the correct original image. The mask should align with the affected region.
 
-### Important Dataset Considerations
-
-- Use consistent image dimensions and preprocessing for paired inputs and targets.
-- Generate masks that accurately represent the mosaicked regions.
-- Include different mosaic block sizes, locations, shapes, and image contents.
-- Split the dataset into training, validation, and test sets.
-- Avoid putting near-duplicate versions of the same original image in different splits.
-
-**Important:** Resizing an already mosaicked image can change the appearance of the mosaic blocks and reduce the visual evidence needed for detection. The preprocessing pipeline should preserve relevant mosaic patterns, and training examples should reflect the conditions expected during inference.
-
 ## Training
 
 The detector and restoration model may require separate training scripts.
 
-Example commands, depending on the filenames in your repository:
+Example commands
 
 ```bash
 python train_detector.py
@@ -195,8 +178,5 @@ Lower L1 loss generally indicates smaller pixel-wise errors. Higher SSIM general
 The exact losses, optimizer, learning rate, and number of epochs depend on the training configuration.
 
 ```bash
-python predict.py
+python run_mosaic_removal.py
 ```
-
-The command and its arguments should be updated to match the actual implementation.
-
